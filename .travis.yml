@@ -1,0 +1,25 @@
+language: go
+git:
+  depth: 1
+
+script:
+  - env GOOS=darwin GOARCH=amd64 go build -o release-proxy && zip darwin-64bit.zip release-proxy && rm release-proxy
+  - env GOOS=linux GOARCH=386 go build -o release-proxy && zip linux-32bit.zip release-proxy && rm release-proxy
+  - env GOOS=linux GOARCH=amd64 go build -o release-proxy && zip linux-64bit.zip release-proxy && rm release-proxy
+  - GOOS=windows go get -u github.com/spf13/cobra
+  - GOOS=windows go get -u github.com/sirupsen/logrus
+  - env GOOS=windows GOARCH=386 go build -o release-proxy.exe && zip windows-32bit.zip release-proxy.exe && rm release-proxy.exe
+  - env GOOS=windows GOARCH=amd64 go build -o release-proxy.exe && zip windows-64bit.zip release-proxy.exe && rm release-proxy.exe
+
+deploy:
+  provider: releases
+  api_key: "$GITHUB_TOKEN"
+  file: 
+  - ./darwin-64bit.zip
+  - ./linux-32bit.zip
+  - ./linux-64bit.zip
+  - ./windows-32bit.zip
+  - ./windows-64bit.zip
+  skip_cleanup: true
+  on:
+    tags: true
