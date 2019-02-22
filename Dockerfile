@@ -7,5 +7,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo
 FROM scratch
 WORKDIR /app
 EXPOSE 80
-COPY --from=builder /go/src/release-proxy/release-proxy .
+COPY --from=builder /go/src/github.com/eniot/release-proxy/release-proxy .
 ENTRYPOINT [ "/app/release-proxy" , "--addr", ":80"]
